@@ -1,4 +1,3 @@
-import cv2
 import mediapipe
 from numpy import ndarray
 
@@ -14,21 +13,28 @@ class hand_tracker():
         else:
             self.debug_draw = None
 
-    def process_frame(self, frame: ndarray):
-        rgb_image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        result = self.hands.process(rgb_image)
+    def find_hands(self, rgb_frame: ndarray):
 
+        result = self.hands.process(rgb_frame)
         if result.multi_hand_landmarks:
             hands = result.multi_hand_landmarks
+            return hands
+
+    def get_landmark_data(self, rgb_frame: ndarray, hands: list):
+
+        if hands:
             hand_data = {}
             for hand_num, hand in enumerate(hands):
                 hand_data[hand_num] = {}
                 for landmark_id, landmark in enumerate(hand.landmark):
-                    height, width, channels = rgb_image.shape
+                    height, width, channels = rgb_frame.shape
                     cx, cy = int(landmark.x*width), int(landmark.y*height)
                     hand_data[hand_num][landmark_id] = [landmark.x, landmark.y, cx, cy]
-                if self.debug_draw:
-                    self.debug_draw.draw_landmarks(frame, hand, self.mp_hands.HAND_CONNECTIONS)
-            return frame, hand_data
-        else:
-            return frame, None
+            return hand_data
+
+    def draw_debug_landmarks(self, frame: ndarray, hands: list):
+
+        if self.debug_draw:
+            for hand in hands:
+                self.debug_draw.draw_landmarks(frame, hand, self.mp_hands.HAND_CONNECTIONS)
+        return frame
