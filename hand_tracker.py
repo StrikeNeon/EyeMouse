@@ -29,7 +29,7 @@ class hand_tracker():
                 for landmark_id, landmark in enumerate(hand.landmark):
                     height, width, channels = rgb_frame.shape
                     cx, cy = int(landmark.x*width), int(landmark.y*height)
-                    hand_data[hand_num][landmark_id] = [landmark.x, landmark.y, cx, cy]
+                    hand_data[hand_num][landmark_id] = [landmark.x, landmark.y, landmark.z, cx, cy]
             return hand_data
 
     def draw_debug_landmarks(self, frame: ndarray, hands: list):
