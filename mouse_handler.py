@@ -36,9 +36,7 @@ class mouse_listener():
         self.y = y
         self.button = button
         self.pressed = pressed
-        print(self.button, self.pressed)
         self.process_name = self.active_window_process_name()
-        print(self.process_name)
 
     def on_scroll(self, x, y, dx, dy):
         self.x = x
