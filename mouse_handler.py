@@ -1,7 +1,36 @@
 from pynput.mouse import Listener
+from pynput.mouse import Button, Controller
 import win32gui
 import win32process
 import psutil
+
+
+class mouse_controller():
+    def __init__(self):
+        self.mouse = Controller()
+        self.x = self.mouse.position[0]
+        self.y = self.mouse.position[1]
+
+    def set_cursor(self, x: int, y: int):
+        self.x = x
+        self.y = y
+        self.mouse.position(self.x, self.y)
+
+    def move_cursor(self, x: int, y: int):
+        self.mouse.move(x, y)
+
+    def press_button(self, button: int):
+        self.mouse.press(Button.left if button == 1 else Button.right)
+
+    def release_button(self, button: int):
+        self.mouse.release(Button.left if button == 1 else Button.right)
+
+    def click_button(self, button: int, double: bool):
+        self.mouse.click(Button.left if button == 1 else Button.right,
+                         2 if double else 1)
+
+    def scroll(self, steps: int):
+        self.mouse.click(0, steps)
 
 
 class mouse_listener():
