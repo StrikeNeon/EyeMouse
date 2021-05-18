@@ -30,7 +30,7 @@ class mouse_controller():
                          2 if double else 1)
 
     def scroll(self, steps: int):
-        self.mouse.click(0, steps)
+        self.mouse.scroll(0, steps)
 
 
 class mouse_listener():
