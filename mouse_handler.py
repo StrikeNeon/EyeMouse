@@ -29,8 +29,8 @@ class mouse_controller():
         self.mouse.click(Button.left if button == 1 else Button.right,
                          2 if double else 1)
 
-    def scroll(self, steps: int):
-        self.mouse.scroll(0, steps)
+    def scroll(self, steps: int, direction: int):
+        self.mouse.scroll(direction, steps)
 
 
 class mouse_listener():

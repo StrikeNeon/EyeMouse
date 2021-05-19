@@ -8,7 +8,7 @@ from volume_controler import win_audio_controller
 
 
 def main():
-    cam_width, cam_height = 648, 480
+    cam_width, cam_height = 640, 480
 
     cap = cv2.VideoCapture(0)
     cap.set(3, cam_width), cap.set(4, cam_height)
@@ -71,9 +71,9 @@ def main():
                     middle_finger_cmc_cz = middle_finger_cmc[2]
                     ring_finger_tip_cz = ring_finger_tip[2]
                     ring_finger_cmc_cz = ring_finger_cmc[2]
-                    print(thumb_tip_cz, index_finger_tip_cz,
-                          index_finger_cmc_cz, middle_finger_tip_cz,
-                          middle_finger_cmc_cz, ring_finger_tip_cz, ring_finger_cmc_cz)
+                    # print(thumb_tip_cz, index_finger_tip_cz,
+                    #       index_finger_cmc_cz, middle_finger_tip_cz,
+                    #       middle_finger_cmc_cz, ring_finger_tip_cz, ring_finger_cmc_cz)
 
                     mode_line_index = math.hypot(index_finger_tip_cx-index_finger_cmc_cx, index_finger_tip_cy-index_finger_cmc_cy)
                     mode_line_middle = math.hypot(middle_finger_tip_cx-middle_finger_cmc_cx, middle_finger_tip_cy-middle_finger_cmc_cy)
@@ -142,25 +142,30 @@ def main():
                         x_movement, y_movement = (movement_center_x-center_x)/mouse_sensitivity, (movement_center_y-center_y)/mouse_sensitivity
                         if mode_line_ring < 80:
                             mouse.move_cursor(x_movement, y_movement)
+                            cv2.line(frame,
+                                     (movement_center_x, movement_center_y),
+                                     (center_x, center_y),
+                                     (155, 0, 0), 3)
+
+                            cv2.line(frame,
+                                     (index_finger_tip_cx, index_finger_tip_cy),
+                                     (index_finger_cmc_cx, index_finger_cmc_cy),
+                                     (155, 0, 155), 2)
+                            cv2.line(frame,
+                                     (middle_finger_tip_cx, middle_finger_tip_cy),
+                                     (middle_finger_cmc_cx, middle_finger_cmc_cy),
+                                     (155, 0, 155), 2)
                         else:
+                            scroll_distance = math.hypot(ring_finger_tip_cx-cam_width//2, ring_finger_tip_cy-cam_height)
+                            print(f"mouse from center: {scroll_distance}")
+                            if scroll_distance < 290:
+                                mouse.scroll(-1, 0)
+                            if scroll_distance > 310:
+                                mouse.scroll(1, 0)
                             cv2.line(frame,
                                      (ring_finger_tip_cx, ring_finger_tip_cy),
                                      (middle_finger_tip_cx, middle_finger_tip_cy),
                                      (155, 0, 155), 2)
-
-                        cv2.line(frame,
-                                 (movement_center_x, movement_center_y),
-                                 (center_x, center_y),
-                                 (155, 0, 0), 3)
-
-                        cv2.line(frame,
-                                 (index_finger_tip_cx, index_finger_tip_cy),
-                                 (index_finger_cmc_cx, index_finger_cmc_cy),
-                                 (155, 0, 155), 2)
-                        cv2.line(frame,
-                                 (middle_finger_tip_cx, middle_finger_tip_cy),
-                                 (middle_finger_cmc_cx, middle_finger_cmc_cy),
-                                 (155, 0, 155), 2)
 
         cv2.imshow("image", frame)
         if cv2.waitKey(1) & 0xff == ord('q'):
